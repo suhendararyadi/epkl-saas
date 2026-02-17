@@ -61,7 +61,7 @@ export default function NewTenantPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Link href="/super-admin/tenants">
+        <Link href="/dashboard/tenants">
           <Button variant="ghost" size="icon">
             <ArrowLeft className="size-4" />
           </Button>
@@ -205,7 +205,7 @@ export default function NewTenantPage() {
 
         {/* Submit Buttons */}
         <div className="flex items-center justify-end gap-4">
-          <Link href="/super-admin/tenants">
+          <Link href="/dashboard/tenants">
             <Button type="button" variant="outline">
               Cancel
             </Button>

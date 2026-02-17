@@ -82,7 +82,7 @@ export default async function TenantDetailPage({ params }: TenantDetailPageProps
       {/* Header */}
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-4">
-          <Link href="/super-admin/tenants">
+          <Link href="/dashboard/tenants">
             <Button variant="ghost" size="icon">
               <ArrowLeft className="size-4" />
             </Button>
@@ -238,7 +238,7 @@ export default async function TenantDetailPage({ params }: TenantDetailPageProps
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form action="/super-admin/tenants/actions" method="POST" className="space-y-4">
+              <form action="/dashboard/tenants/actions" method="POST" className="space-y-4">
                 <input type="hidden" name="id" value={tenant.id} />
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">

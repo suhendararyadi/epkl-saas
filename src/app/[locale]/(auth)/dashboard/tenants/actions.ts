@@ -78,8 +78,8 @@ export async function createTenant(formData: FormData) {
       description: `Tenant ${data.name} created with ${data.plan} plan`,
     });
 
-    revalidatePath('/super-admin/tenants');
-    redirect('/super-admin/tenants');
+    revalidatePath('/dashboard/tenants');
+    redirect('/dashboard/tenants');
   } catch (error) {
     console.error('Error creating tenant:', error);
     return { error: 'Failed to create tenant' };
@@ -241,8 +241,8 @@ export async function updateTenant(formData: FormData) {
       description: `Tenant updated: ${Object.keys(data).join(', ')}`,
     });
 
-    revalidatePath(`/super-admin/tenants/${id}`);
-    revalidatePath('/super-admin/tenants');
+    revalidatePath(`/dashboard/tenants/${id}`);
+    revalidatePath('/dashboard/tenants');
 
     return { success: true };
   } catch (error) {
@@ -269,7 +269,7 @@ export async function deleteTenant(id: number) {
       description: 'Tenant soft deleted',
     });
 
-    revalidatePath('/super-admin/tenants');
+    revalidatePath('/dashboard/tenants');
     return { success: true };
   } catch (error) {
     console.error('Error deleting tenant:', error);

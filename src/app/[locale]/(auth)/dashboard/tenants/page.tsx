@@ -110,7 +110,7 @@ async function TenantsTable({ searchParams }: TenantsPageProps) {
               <TableRow key={tenant.id}>
                 <TableCell className="font-medium">
                   <Link
-                    href={`/super-admin/tenants/${tenant.id}`}
+                    href={`/dashboard/tenants/${tenant.id}`}
                     className="hover:underline"
                   >
                     {tenant.name}
@@ -144,7 +144,7 @@ async function TenantsTable({ searchParams }: TenantsPageProps) {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem asChild>
-                        <Link href={`/super-admin/tenants/${tenant.id}`}>
+                        <Link href={`/dashboard/tenants/${tenant.id}`}>
                           View Details
                         </Link>
                       </DropdownMenuItem>
@@ -211,7 +211,7 @@ export default function TenantsPage({ searchParams }: TenantsPageProps) {
             Manage all schools and organizations
           </p>
         </div>
-        <Link href="/super-admin/tenants/new">
+        <Link href="/dashboard/tenants/new">
           <Button>
             <Plus className="mr-2 size-4" />
             Add Tenant
@@ -221,7 +221,7 @@ export default function TenantsPage({ searchParams }: TenantsPageProps) {
 
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-4">
-        <form className="flex flex-1 items-center gap-2" action="/super-admin/tenants">
+        <form className="flex flex-1 items-center gap-2" action="/dashboard/tenants">
           <div className="relative max-w-sm flex-1">
             <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
