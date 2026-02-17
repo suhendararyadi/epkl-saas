@@ -1,8 +1,8 @@
-# E-PKL SaaS Production Setup SQL
-# ============================================================================
-# Jalankan file ini di Supabase Dashboard > SQL Editor
-# Project: E PKL SMKN 9 Garut (gawpkafgndtqmaoamxdk)
-# ============================================================================
+-- E-PKL SaaS Production Setup SQL
+-- ============================================================================
+-- Jalankan file ini di Supabase Dashboard > SQL Editor
+-- Project: E PKL SMKN 9 Garut (gawpkafgndtqmaoamxdk)
+-- ============================================================================
 
 -- ============================================================================
 -- STEP 1: Create Demo Tenant (Super Admin)
