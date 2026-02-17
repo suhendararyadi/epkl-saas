@@ -1,8 +1,8 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
-import {
-  type NextFetchEvent,
-  type NextRequest,
-  NextResponse,
+import type {
+  NextFetchEvent,
+  NextRequest,
+  // NextResponse,
 } from 'next/server';
 import createMiddleware from 'next-intl/middleware';
 
@@ -62,21 +62,23 @@ export default function middleware(
         });
       }
 
-      const authObj = await auth();
+      // const authObj = await auth();
 
-      if (
-        authObj.userId
-        && !authObj.orgId
-        && req.nextUrl.pathname.includes('/dashboard')
-        && !req.nextUrl.pathname.endsWith('/organization-selection')
-      ) {
-        const orgSelection = new URL(
-          '/onboarding/organization-selection',
-          req.url,
-        );
+      // TODO: Enable organization check after Clerk organizations setup
+      // const authObj = await auth();
+      // if (
+      //   authObj.userId
+      //   && !authObj.orgId
+      //   && req.nextUrl.pathname.includes('/dashboard')
+      //   && !req.nextUrl.pathname.endsWith('/organization-selection')
+      // ) {
+      //   const orgSelection = new URL(
+      //     '/onboarding/organization-selection',
+      //     req.url,
+      //   );
 
-        return NextResponse.redirect(orgSelection);
-      }
+      //   return NextResponse.redirect(orgSelection);
+      // }
 
       const response = intlMiddleware(req);
 
