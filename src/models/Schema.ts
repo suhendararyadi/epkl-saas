@@ -1,5 +1,8 @@
 import {
   bigint,
+  boolean,
+  integer,
+  pgEnum,
   pgTable,
   serial,
   text,
@@ -19,6 +22,11 @@ import {
 
 // Need a database for production? Check out https://www.prisma.io/?via=saasboilerplatesrc
 // Tested and compatible with Next.js Boilerplate
+
+// Enums
+export const tenantPlanEnum = pgEnum('tenant_plan', ['free', 'pro', 'enterprise']);
+export const tenantStatusEnum = pgEnum('tenant_status', ['active', 'inactive', 'suspended']);
+
 export const organizationSchema = pgTable(
   'organization',
   {
@@ -45,6 +53,63 @@ export const organizationSchema = pgTable(
     };
   },
 );
+
+// Tenants table for multi-tenant SaaS
+export const tenantsSchema = pgTable(
+  'tenants',
+  {
+    id: serial('id').primaryKey(),
+    name: text('name').notNull(),
+    subdomain: text('subdomain').notNull().unique(),
+    plan: tenantPlanEnum('plan').default('free').notNull(),
+    status: tenantStatusEnum('status').default('active').notNull(),
+    adminEmail: text('admin_email').notNull(),
+    adminClerkId: text('admin_clerk_id'),
+    maxStudents: integer('max_students').default(50).notNull(),
+    stripeCustomerId: text('stripe_customer_id'),
+    stripeSubscriptionId: text('stripe_subscription_id'),
+    isDeleted: boolean('is_deleted').default(false).notNull(),
+    deletedAt: timestamp('deleted_at', { mode: 'date' }),
+    updatedAt: timestamp('updated_at', { mode: 'date' })
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+    createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
+  },
+  (table) => {
+    return {
+      subdomainIdx: uniqueIndex('subdomain_idx').on(table.subdomain),
+    };
+  },
+);
+
+// Students table per tenant
+export const studentsSchema = pgTable('students', {
+  id: serial('id').primaryKey(),
+  tenantId: integer('tenant_id').notNull().references(() => tenantsSchema.id),
+  nis: text('nis').notNull(),
+  name: text('name').notNull(),
+  class: text('class'),
+  email: text('email'),
+  phone: text('phone'),
+  address: text('address'),
+  isActive: boolean('is_active').default(true).notNull(),
+  updatedAt: timestamp('updated_at', { mode: 'date' })
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+  createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
+});
+
+// Activity logs for tenants
+export const activityLogsSchema = pgTable('activity_logs', {
+  id: serial('id').primaryKey(),
+  tenantId: integer('tenant_id').notNull().references(() => tenantsSchema.id),
+  action: text('action').notNull(),
+  description: text('description'),
+  metadata: text('metadata'),
+  createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
+});
 
 export const todoSchema = pgTable('todo', {
   id: serial('id').primaryKey(),
