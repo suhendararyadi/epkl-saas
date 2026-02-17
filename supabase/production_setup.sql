@@ -62,73 +62,84 @@ VALUES (
 ON CONFLICT (id) DO NOTHING;
 
 -- ============================================================================
--- STEP 3: Storage RLS Policies (if not exists)
+-- STEP 3: Storage RLS Policies
+-- ============================================================================
+-- Note: RLS is already enabled by Supabase, skip ALTER TABLE
 -- ============================================================================
 
--- Enable RLS on storage objects
-ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
-
 -- Attendance bucket policies
-CREATE POLICY IF NOT EXISTS "Allow public access to attendance photos" ON storage.objects
+DROP POLICY IF EXISTS "Allow public access to attendance photos" ON storage.objects;
+CREATE POLICY "Allow public access to attendance photos" ON storage.objects
   FOR SELECT USING (bucket_id = 'attendances');
 
-CREATE POLICY IF NOT EXISTS "Allow authenticated uploads to attendances" ON storage.objects
+DROP POLICY IF EXISTS "Allow authenticated uploads to attendances" ON storage.objects;
+CREATE POLICY "Allow authenticated uploads to attendances" ON storage.objects
   FOR INSERT WITH CHECK (
     bucket_id = 'attendances' AND
     auth.role() = 'authenticated'
   );
 
-CREATE POLICY IF NOT EXISTS "Allow users to update own attendance photos" ON storage.objects
+DROP POLICY IF EXISTS "Allow users to update own attendance photos" ON storage.objects;
+CREATE POLICY "Allow users to update own attendance photos" ON storage.objects
   FOR UPDATE USING (
     bucket_id = 'attendances' AND
     auth.uid() = owner
   );
 
-CREATE POLICY IF NOT EXISTS "Allow users to delete own attendance photos" ON storage.objects
+DROP POLICY IF EXISTS "Allow users to delete own attendance photos" ON storage.objects;
+CREATE POLICY "Allow users to delete own attendance photos" ON storage.objects
   FOR DELETE USING (
     bucket_id = 'attendances' AND
     auth.uid() = owner
   );
 
 -- Journal evidence bucket policies
-CREATE POLICY IF NOT EXISTS "Allow public access to journal evidence" ON storage.objects
+DROP POLICY IF EXISTS "Allow public access to journal evidence" ON storage.objects;
+CREATE POLICY "Allow public access to journal evidence" ON storage.objects
   FOR SELECT USING (bucket_id = 'journal_evidence');
 
-CREATE POLICY IF NOT EXISTS "Allow authenticated uploads to journal_evidence" ON storage.objects
+DROP POLICY IF EXISTS "Allow authenticated uploads to journal_evidence" ON storage.objects;
+CREATE POLICY "Allow authenticated uploads to journal_evidence" ON storage.objects
   FOR INSERT WITH CHECK (
     bucket_id = 'journal_evidence' AND
     auth.role() = 'authenticated'
   );
 
-CREATE POLICY IF NOT EXISTS "Allow users to update own journal evidence" ON storage.objects
+DROP POLICY IF EXISTS "Allow users to update own journal evidence" ON storage.objects;
+CREATE POLICY "Allow users to update own journal evidence" ON storage.objects
   FOR UPDATE USING (
     bucket_id = 'journal_evidence' AND
     auth.uid() = owner
   );
 
-CREATE POLICY IF NOT EXISTS "Allow users to delete own journal evidence" ON storage.objects
+DROP POLICY IF EXISTS "Allow users to delete own journal evidence" ON storage.objects;
+CREATE POLICY "Allow users to delete own journal evidence" ON storage.objects
   FOR DELETE USING (
     bucket_id = 'journal_evidence' AND
     auth.uid() = owner
   );
 
 -- Avatars bucket policies
-CREATE POLICY IF NOT EXISTS "Allow public access to avatars" ON storage.objects
+DROP POLICY IF EXISTS "Allow public access to avatars" ON storage.objects;
+CREATE POLICY "Allow public access to avatars" ON storage.objects
   FOR SELECT USING (bucket_id = 'avatars');
 
-CREATE POLICY IF NOT EXISTS "Allow authenticated uploads to avatars" ON storage.objects
+DROP POLICY IF EXISTS "Allow authenticated uploads to avatars" ON storage.objects;
+CREATE POLICY "Allow authenticated uploads to avatars" ON storage.objects
   FOR INSERT WITH CHECK (
     bucket_id = 'avatars' AND
     auth.role() = 'authenticated'
   );
 
-CREATE POLICY IF NOT EXISTS "Allow users to update own avatar" ON storage.objects
+DROP POLICY IF EXISTS "Allow users to update own avatar" ON storage.objects;
+CREATE POLICY "Allow users to update own avatar" ON storage.objects
   FOR UPDATE USING (
     bucket_id = 'avatars' AND
     auth.uid() = owner
   );
 
-CREATE POLICY IF NOT EXISTS "Allow users to delete own avatar" ON storage.objects
+DROP POLICY IF EXISTS "Allow users to delete own avatar" ON storage.objects;
+CREATE POLICY "Allow users to delete own avatar" ON storage.objects
   FOR DELETE USING (
     bucket_id = 'avatars' AND
     auth.uid() = owner
