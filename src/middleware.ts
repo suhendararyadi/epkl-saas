@@ -6,6 +6,7 @@ import {
 } from 'next/server';
 import createMiddleware from 'next-intl/middleware';
 
+import { getTenantFromSubdomain } from './lib/tenant';
 import { AllLocales, AppConfig } from './utils/AppConfig';
 
 const intlMiddleware = createMiddleware({
@@ -27,6 +28,22 @@ export default function middleware(
   request: NextRequest,
   event: NextFetchEvent,
 ) {
+  // Detect tenant from subdomain
+  const hostname = request.headers.get('host') || '';
+  const tenant = getTenantFromSubdomain(hostname);
+
+  // Create response with tenant header
+  const handleRequest = (req: NextRequest) => {
+    const response = intlMiddleware(req);
+
+    // Attach tenant to response headers
+    if (tenant) {
+      response.headers.set('x-tenant-id', tenant);
+    }
+
+    return response;
+  };
+
   if (
     request.nextUrl.pathname.includes('/sign-in')
     || request.nextUrl.pathname.includes('/sign-up')
@@ -61,11 +78,18 @@ export default function middleware(
         return NextResponse.redirect(orgSelection);
       }
 
-      return intlMiddleware(req);
+      const response = intlMiddleware(req);
+
+      // Attach tenant to response headers
+      if (tenant) {
+        response.headers.set('x-tenant-id', tenant);
+      }
+
+      return response;
     })(request, event);
   }
 
-  return intlMiddleware(request);
+  return handleRequest(request);
 }
 
 export const config = {
