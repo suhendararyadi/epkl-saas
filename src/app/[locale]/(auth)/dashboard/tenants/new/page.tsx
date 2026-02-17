@@ -128,14 +128,16 @@ export default function NewTenantPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="adminEmail">Admin Email *</Label>
+                <Label htmlFor="adminEmail">Admin Email (Optional)</Label>
                 <Input
                   id="adminEmail"
                   name="adminEmail"
                   type="email"
                   placeholder="admin@school.ac.id"
-                  required
                 />
+                <p className="text-xs text-muted-foreground">
+                  Contact email for the school administrator
+                </p>
               </div>
             </CardContent>
           </Card>

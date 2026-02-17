@@ -17,7 +17,7 @@ const createTenantSchema = z.object({
   name: z.string().min(3).max(100),
   subdomain: z.string().min(3).max(50).regex(/^[a-z0-9-]+$/),
   plan: z.enum(['free', 'pro', 'enterprise']),
-  adminEmail: z.string().email(),
+  adminEmail: z.string().email().optional(), // Optional for now
   maxStudents: z.number().min(10).max(10000),
 });
 
@@ -61,7 +61,7 @@ export async function createTenant(formData: FormData) {
         name: data.name,
         subdomain: data.subdomain,
         plan: data.plan,
-        adminEmail: data.adminEmail,
+        // adminEmail: data.adminEmail, // Field doesn't exist in schema
         maxStudents: data.maxStudents,
         status: 'active',
       })
@@ -134,7 +134,7 @@ export async function getTenants({
       subdomain: tenantsSchema.subdomain,
       plan: tenantsSchema.plan,
       status: tenantsSchema.status,
-      adminEmail: tenantsSchema.adminEmail,
+      // adminEmail: tenantsSchema.adminEmail, // Removed from schema
       maxStudents: tenantsSchema.maxStudents,
       createdAt: tenantsSchema.createdAt,
       studentCount: sql<number>`(
@@ -165,7 +165,7 @@ export async function getTenantById(id: number) {
       subdomain: tenantsSchema.subdomain,
       plan: tenantsSchema.plan,
       status: tenantsSchema.status,
-      adminEmail: tenantsSchema.adminEmail,
+      // adminEmail: tenantsSchema.adminEmail, // Removed from schema
       maxStudents: tenantsSchema.maxStudents,
       stripeCustomerId: tenantsSchema.stripeCustomerId,
       stripeSubscriptionId: tenantsSchema.stripeSubscriptionId,
