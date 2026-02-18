@@ -30,20 +30,27 @@ const PLAN_LIMITS: Record<string, number> = {
 
 // Create new tenant
 export async function createTenant(formData: FormData) {
-  const data = {
-    name: formData.get('name') as string,
-    subdomain: formData.get('subdomain') as string,
-    plan: formData.get('plan') as 'free' | 'pro' | 'enterprise',
-    adminEmail: formData.get('adminEmail') as string,
-    maxStudents: Number.parseInt(formData.get('maxStudents') as string, 10),
-  };
-
-  const parsed = createTenantSchema.safeParse(data);
-  if (!parsed.success) {
-    return { error: 'Invalid data', details: parsed.error.flatten() };
-  }
-
   try {
+    const data = {
+      name: formData.get('name') as string,
+      subdomain: formData.get('subdomain') as string,
+      plan: formData.get('plan') as 'free' | 'pro' | 'enterprise',
+      adminEmail: formData.get('adminEmail') as string,
+      maxStudents: Number.parseInt(formData.get('maxStudents') as string, 10),
+    };
+
+    // eslint-disable-next-line no-console
+    console.log('[createTenant] Input data:', data);
+
+    const parsed = createTenantSchema.safeParse(data);
+    if (!parsed.success) {
+      console.error('[createTenant] Validation failed:', parsed.error.flatten());
+      return { error: 'Invalid data', details: parsed.error.flatten() };
+    }
+
+    // eslint-disable-next-line no-console
+    console.log('[createTenant] Validation passed');
+
     // Check if subdomain already exists
     const existing = await db
       .select()
@@ -51,9 +58,15 @@ export async function createTenant(formData: FormData) {
       .where(eq(tenantsSchema.subdomain, data.subdomain))
       .limit(1);
 
+    // eslint-disable-next-line no-console
+    console.log('[createTenant] Existing tenants:', existing);
+
     if (existing.length > 0) {
       return { error: 'Subdomain already exists' };
     }
+
+    // eslint-disable-next-line no-console
+    console.log('[createTenant] Inserting tenant...');
 
     const [tenant] = await db
       .insert(tenantsSchema)
@@ -67,9 +80,16 @@ export async function createTenant(formData: FormData) {
       })
       .returning();
 
+    // eslint-disable-next-line no-console
+    console.log('[createTenant] Inserted tenant:', tenant);
+
     if (!tenant) {
-      return { error: 'Failed to create tenant' };
+      console.error('[createTenant] No tenant returned from insert');
+      return { error: 'Failed to create tenant - no result' };
     }
+
+    // eslint-disable-next-line no-console
+    console.log('[createTenant] Inserting activity log...');
 
     // Log activity
     await db.insert(activityLogsSchema).values({
@@ -78,11 +98,22 @@ export async function createTenant(formData: FormData) {
       description: `Tenant ${data.name} created with ${data.plan} plan`,
     });
 
+    // eslint-disable-next-line no-console
+    console.log('[createTenant] Activity log inserted');
+
     revalidatePath('/dashboard/tenants');
     redirect('/dashboard/tenants');
   } catch (error) {
-    console.error('Error creating tenant:', error);
-    return { error: 'Failed to create tenant', details: String(error) };
+    console.error('[createTenant] Error:', error);
+
+    console.error('[createTenant] Error stack:', error instanceof Error ? error.stack : 'No stack');
+
+    // Return detailed error for debugging
+    return {
+      error: 'Failed to create tenant',
+      details: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    };
   }
 }
 

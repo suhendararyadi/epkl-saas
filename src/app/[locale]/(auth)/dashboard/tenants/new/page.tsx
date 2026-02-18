@@ -29,6 +29,7 @@ export default function NewTenantPage() {
   const [selectedPlan, setSelectedPlan] = useState('free');
   const [maxStudents, setMaxStudents] = useState(50);
   const [error, setError] = useState('');
+  const [errorDetails, setErrorDetails] = useState<any>(null);
 
   const handlePlanChange = useCallback((plan: string) => {
     setSelectedPlan(plan);
@@ -47,11 +48,13 @@ export default function NewTenantPage() {
   async function handleSubmit(formData: FormData) {
     setIsSubmitting(true);
     setError('');
+    setErrorDetails(null);
 
     const result = await createTenant(formData);
 
     if (result?.error) {
       setError(result.error);
+      setErrorDetails(result.details || result.stack || null);
       setIsSubmitting(false);
     }
     // Redirect happens on success
@@ -75,8 +78,13 @@ export default function NewTenantPage() {
       </div>
 
       {error && (
-        <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-destructive">
-          {error}
+        <div className="space-y-2 rounded-lg border border-destructive/50 bg-destructive/10 p-4">
+          <p className="font-medium text-destructive">{error}</p>
+          {errorDetails && (
+            <pre className="overflow-auto text-xs text-destructive/80">
+              {JSON.stringify(errorDetails, null, 2)}
+            </pre>
+          )}
         </div>
       )}
 
