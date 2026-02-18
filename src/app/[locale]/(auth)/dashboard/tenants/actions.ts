@@ -104,8 +104,12 @@ export async function createTenant(formData: FormData) {
     revalidatePath('/dashboard/tenants');
     redirect('/dashboard/tenants');
   } catch (error) {
-    console.error('[createTenant] Error:', error);
+    // Re-throw NEXT_REDIRECT (it's not an error, it's how Next.js handles redirects)
+    if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
+      throw error;
+    }
 
+    console.error('[createTenant] Error:', error);
     console.error('[createTenant] Error stack:', error instanceof Error ? error.stack : 'No stack');
 
     // Return detailed error for debugging
