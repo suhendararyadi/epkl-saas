@@ -82,7 +82,7 @@ export async function createTenant(formData: FormData) {
     redirect('/dashboard/tenants');
   } catch (error) {
     console.error('Error creating tenant:', error);
-    return { error: 'Failed to create tenant' };
+    return { error: 'Failed to create tenant', details: String(error) };
   }
 }
 
@@ -157,7 +157,7 @@ export async function getTenants({
 }
 
 // Get single tenant with stats
-export async function getTenantById(id: number) {
+export async function getTenantById(id: string) {
   const [tenant] = await db
     .select({
       id: tenantsSchema.id,
@@ -202,7 +202,7 @@ export async function getTenantById(id: number) {
 
 // Update tenant
 export async function updateTenant(formData: FormData) {
-  const id = Number.parseInt(formData.get('id') as string, 10);
+  const id = formData.get('id') as string;
   const data: Record<string, any> = {};
 
   const name = formData.get('name') as string;
@@ -252,7 +252,7 @@ export async function updateTenant(formData: FormData) {
 }
 
 // Soft delete tenant
-export async function deleteTenant(id: number) {
+export async function deleteTenant(id: string) {
   try {
     await db
       .update(tenantsSchema)

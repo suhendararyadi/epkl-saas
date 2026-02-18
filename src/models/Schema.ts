@@ -8,6 +8,7 @@ import {
   text,
   timestamp,
   uniqueIndex,
+  uuid,
 } from 'drizzle-orm/pg-core';
 
 // This file defines the structure of your database tables using the Drizzle ORM.
@@ -58,7 +59,7 @@ export const organizationSchema = pgTable(
 export const tenantsSchema = pgTable(
   'tenants',
   {
-    id: serial('id').primaryKey(),
+    id: uuid('id').primaryKey().defaultRandom(),
     name: text('name').notNull(),
     subdomain: text('subdomain').notNull().unique(),
     plan: tenantPlanEnum('plan').default('free').notNull(),
@@ -86,7 +87,7 @@ export const tenantsSchema = pgTable(
 // Students table per tenant
 export const studentsSchema = pgTable('students', {
   id: serial('id').primaryKey(),
-  tenantId: integer('tenant_id').notNull().references(() => tenantsSchema.id),
+  tenantId: uuid('tenant_id').notNull().references(() => tenantsSchema.id),
   nis: text('nis').notNull(),
   name: text('name').notNull(),
   class: text('class'),
@@ -104,7 +105,7 @@ export const studentsSchema = pgTable('students', {
 // Activity logs for tenants
 export const activityLogsSchema = pgTable('activity_logs', {
   id: serial('id').primaryKey(),
-  tenantId: integer('tenant_id').notNull().references(() => tenantsSchema.id),
+  tenantId: uuid('tenant_id').notNull().references(() => tenantsSchema.id),
   action: text('action').notNull(),
   description: text('description'),
   metadata: text('metadata'),

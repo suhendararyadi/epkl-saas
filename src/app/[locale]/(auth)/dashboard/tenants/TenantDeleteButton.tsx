@@ -17,7 +17,7 @@ import {
 import { deleteTenant } from './actions';
 
 type TenantDeleteButtonProps = {
-  tenantId: number;
+  tenantId: string;
   tenantName: string;
 };
 

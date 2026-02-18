@@ -60,9 +60,9 @@ function PlanBadge({ plan }: { plan: string }) {
 }
 
 export default async function TenantDetailPage({ params }: TenantDetailPageProps) {
-  const tenantId = Number.parseInt(params.id, 10);
+  const tenantId = params.id;
 
-  if (Number.isNaN(tenantId)) {
+  if (!tenantId) {
     notFound();
   }
 
