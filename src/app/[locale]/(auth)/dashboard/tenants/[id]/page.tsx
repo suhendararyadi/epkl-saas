@@ -204,10 +204,10 @@ export default async function TenantDetailPage({ params }: TenantDetailPageProps
                     .epkl.id
                   </p>
                 </div>
-                {/* <div className="space-y-1">
+                <div className="space-y-1">
                   <p className="text-sm font-medium text-muted-foreground">Admin Email</p>
                   <p>{tenant.adminEmail}</p>
-                </div> */}
+                </div>
                 <div className="space-y-1">
                   <p className="text-sm font-medium text-muted-foreground">Status</p>
                   <p><StatusBadge status={tenant.status} /></p>

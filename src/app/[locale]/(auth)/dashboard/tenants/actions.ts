@@ -74,7 +74,7 @@ export async function createTenant(formData: FormData) {
         name: data.name,
         subdomain: data.subdomain,
         plan: data.plan,
-        // adminEmail: data.adminEmail, // Field doesn't exist in schema
+        adminEmail: data.adminEmail || `${data.subdomain}@epkl.id`, // Default if not provided
         maxStudents: data.maxStudents,
         status: 'active',
       })
@@ -165,7 +165,7 @@ export async function getTenants({
       subdomain: tenantsSchema.subdomain,
       plan: tenantsSchema.plan,
       status: tenantsSchema.status,
-      // adminEmail: tenantsSchema.adminEmail, // Removed from schema
+      adminEmail: tenantsSchema.adminEmail,
       maxStudents: tenantsSchema.maxStudents,
       createdAt: tenantsSchema.createdAt,
       studentCount: sql<number>`(
@@ -196,7 +196,7 @@ export async function getTenantById(id: string) {
       subdomain: tenantsSchema.subdomain,
       plan: tenantsSchema.plan,
       status: tenantsSchema.status,
-      // adminEmail: tenantsSchema.adminEmail, // Removed from schema
+      adminEmail: tenantsSchema.adminEmail,
       maxStudents: tenantsSchema.maxStudents,
       stripeCustomerId: tenantsSchema.stripeCustomerId,
       stripeSubscriptionId: tenantsSchema.stripeSubscriptionId,

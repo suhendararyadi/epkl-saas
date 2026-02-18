@@ -64,8 +64,8 @@ export const tenantsSchema = pgTable(
     subdomain: text('subdomain').notNull().unique(),
     plan: tenantPlanEnum('plan').default('free').notNull(),
     status: tenantStatusEnum('status').default('active').notNull(),
-    // adminEmail: text('admin_email').notNull(), // Removed from DB schema
-    // adminClerkId: text('admin_clerk_id'), // Removed from DB schema
+    adminEmail: text('admin_email').notNull(), // Required in actual DB
+    adminClerkId: text('admin_clerk_id'), // Optional
     maxStudents: integer('max_students').default(50).notNull(),
     stripeCustomerId: text('stripe_customer_id'),
     stripeSubscriptionId: text('stripe_subscription_id'),
