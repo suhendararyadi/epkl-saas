@@ -115,7 +115,7 @@ export default function NewTenantPage() {
                     required
                     minLength={3}
                     maxLength={50}
-                    pattern="[a-z0-9-]+"
+                    pattern="[a-z0-9\-]+"
                     title="Only lowercase letters, numbers, and hyphens allowed"
                   />
                   <span className="whitespace-nowrap text-muted-foreground">
